@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "624783876166",
+    "project_id": "streammusic-638e4",
+    "storage_bucket": "streammusic-638e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624783876166:android:61eae6f7fa7b4e042a2a47",
+        "android_client_info": {
+          "package_name": "com.bassem.streammusicadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624783876166-m92g1r74o7la02tfhtu1uasr8qrtjpj8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlgLV0tGvLJC8CS6K3o-XadavdBZtXmec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624783876166-m92g1r74o7la02tfhtu1uasr8qrtjpj8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
