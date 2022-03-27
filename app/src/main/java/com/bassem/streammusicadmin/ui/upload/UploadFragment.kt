@@ -19,12 +19,13 @@ import com.bassem.streammusicadmin.Audio
 import com.bassem.streammusicadmin.R
 import com.bassem.streammusicadmin.databinding.FragmentUploadBinding
 import com.google.android.material.chip.Chip
+import java.io.File
 import java.net.URI
 
 class UploadFragment : Fragment(R.layout.fragment_upload) {
     private var _binding: FragmentUploadBinding? = null
     private val binding get() = _binding
-    private val AUDIO_CODE = 100
+    private val AUDIO_CODE = 200
     private val Cover_CODE = 100
     private var audio: Uri? = null
     private var cover: Uri? = null
@@ -118,6 +119,8 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
         if (requestCode == AUDIO_CODE && resultCode == RESULT_OK) {
             if (data != null) {
                 audio = data.data!!
+               val details= File(audio?.path).name
+                println(details)
             }
 
         }
@@ -125,12 +128,16 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
             if (data != null) {
                 cover = data.data!!
                 binding?.coverPhoto?.setImageURI(cover)
+                println("cover")
             }
 
         }
 
 
+
+
     }
+
 
     private fun getData(audioL: String, cover: String, cato: String): Audio {
         val audio = Audio()
