@@ -4,17 +4,18 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.bassem.streammusicadmin.Audio
-import com.google.android.gms.tasks.OnSuccessListener
+import com.bassem.streammusicadmin.entities.Singer
+import com.bassem.streammusicadmin.entities.Song
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
-import kotlin.collections.HashMap
 
-class ViewModelUpload(app: Application) : AndroidViewModel(app) {
+class UploadViewModel(app: Application) : AndroidViewModel(app) {
     private var db: FirebaseFirestore? = null
     var audioLink = MutableLiveData<String>()
     var coverLink = MutableLiveData<String>()
+    var singersList = MutableLiveData<MutableList<Singer>>()
 
 
     fun uploadAudio(uri: Uri) {
@@ -42,10 +43,27 @@ class ViewModelUpload(app: Application) : AndroidViewModel(app) {
 
     }
 
-    fun addBookInfo(audio: Audio) {
+    fun addBookInfo(song: Song) {
         val document = UUID.randomUUID().toString()
         db = FirebaseFirestore.getInstance()
-        db?.collection("books")?.document(document)?.set(audio)
+        db?.collection("songs")?.document(document)?.set(song)
+    }
+
+    fun getSingersList() {
+        val singers: MutableList<Singer> = mutableListOf()
+        db = FirebaseFirestore.getInstance()
+        db?.collection("singers")?.get()?.addOnCompleteListener {
+            if (it.isSuccessful) {
+                for (dc: DocumentChange in it.result.documentChanges) {
+                    if (dc.type == DocumentChange.Type.ADDED) {
+                        singers.add(dc.document.toObject(Singer::class.java))
+                    }
+
+                }
+                singersList.postValue(singers)
+
+            }
+        }
     }
 
 

@@ -1,10 +1,11 @@
-package com.bassem.streammusicadmin
+package com.bassem.streammusicadmin.entities
 
-data class Audio(
+data class Song(
     var name: String = "",
     var audioLink: String = "",
     var coverLink: String = "",
     var description: String = "",
     var category: String = "",
+    var singer: String = ""
 
 )

@@ -1,7 +1,6 @@
 package com.bassem.streammusicadmin.ui.upload
 
 import android.app.Activity.RESULT_OK
-import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
@@ -10,17 +9,16 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.bassem.streammusicadmin.Audio
+import com.bassem.streammusicadmin.entities.Song
 import com.bassem.streammusicadmin.R
 import com.bassem.streammusicadmin.databinding.FragmentUploadBinding
 import com.google.android.material.chip.Chip
 import java.io.File
-import java.net.URI
 
 class UploadFragment : Fragment(R.layout.fragment_upload) {
     private var _binding: FragmentUploadBinding? = null
@@ -31,8 +29,9 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
     private var cover: Uri? = null
     private var audioLink: String? = null
     private var category: String? = null
+    private var selectedSinger: String? = null
 
-    private var viewmodel: ViewModelUpload? = null
+    private var viewmodel: UploadViewModel? = null
     var dialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,8 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewmodel = ViewModelProvider(this)[ViewModelUpload::class.java]
+        viewmodel = ViewModelProvider(this)[UploadViewModel::class.java]
+        viewmodel?.getSingersList()
 
         //Listeners
         binding?.musicFile?.setOnClickListener {
@@ -80,6 +80,31 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
 
 
         // Observers
+        viewmodel?.singersList?.observe(viewLifecycleOwner) {
+            val singers = it.map { it.name }
+            val spinerAdapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, singers)
+            binding?.spinner?.apply {
+                adapter = spinerAdapter
+
+            }
+            binding?.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    position: Int,
+                    p3: Long
+                ) {
+                    selectedSinger = singers[position]
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                }
+
+            }
+
+        }
         viewmodel?.audioLink?.observe(viewLifecycleOwner) {
             if (it != null) {
                 audioLink = it
@@ -92,8 +117,6 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
                 viewmodel?.addBookInfo(getData(audioLink!!, it, category!!))
                 dialog?.dismiss()
                 clearFields()
-
-
             }
 
 
@@ -119,7 +142,7 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
         if (requestCode == AUDIO_CODE && resultCode == RESULT_OK) {
             if (data != null) {
                 audio = data.data!!
-               val details= File(audio?.path).name
+                val details = File(audio?.path).name
                 println(details)
             }
 
@@ -134,19 +157,19 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
         }
 
 
-
-
     }
 
 
-    private fun getData(audioL: String, cover: String, cato: String): Audio {
-        val audio = Audio()
+    private fun getData(audioL: String, cover: String, cato: String): Song {
+        val audio = Song()
         return audio.apply {
             name = binding?.bookName?.text.toString()
             description = binding?.bookDesc?.text.toString()
             audioLink = audioL
             coverLink = cover
             category = cato
+            singer= selectedSinger!!
+
         }
     }
 
@@ -165,7 +188,7 @@ class UploadFragment : Fragment(R.layout.fragment_upload) {
         dialog?.show()
     }
 
-    fun isFieldsFull() =
-        binding?.bookDesc?.text?.isNotEmpty()!! && binding?.bookName?.text?.isNotEmpty()!! && audio != null && cover != null && category != null
+    private fun isFieldsFull() =
+     binding?.bookName?.text?.isNotEmpty()!! && audio != null && cover != null && category != null
 
 }
