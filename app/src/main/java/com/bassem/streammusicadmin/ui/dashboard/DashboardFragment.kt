@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.bassem.streammusicadmin.R
 import com.bassem.streammusicadmin.databinding.FragmentDashboardBinding
@@ -30,11 +31,20 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
         binding?.apply {
             songsCard.setOnClickListener {
-                findNavController().navigate(R.id.action_dashboardFragment_to_uploadFragment)
+                navigate("allsongs")
             }
             singersCard.setOnClickListener {
-                findNavController().navigate(R.id.action_dashboardFragment_to_addsingerFragment)
+
+                navigate("allsingers")
             }
         }
+    }
+
+    private fun navigate(key: String) {
+        val bundle = Bundle()
+        bundle.putString("key",key)
+        val nav =
+            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+        nav.navigate(R.id.action_dashboardFragment_to_singersListFragment, bundle)
     }
 }

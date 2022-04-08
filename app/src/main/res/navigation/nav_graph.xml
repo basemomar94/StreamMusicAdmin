@@ -20,9 +20,16 @@
         <action
             android:id="@+id/action_dashboardFragment_to_addsingerFragment"
             app:destination="@id/addsingerFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_singersListFragment"
+            app:destination="@id/singersListFragment" />
     </fragment>
     <fragment
         android:id="@+id/addsingerFragment"
-        android:name="com.bassem.streammusicadmin.ui.addsinger.AddsingerFragment"
+        android:name="com.bassem.streammusicadmin.ui.singers.addsinger.AddsingerFragment"
         android:label="AddsingerFragment" />
+    <fragment
+        android:id="@+id/singersListFragment"
+        android:name="com.bassem.streammusicadmin.ui.singers.singerslist.SingersListFragment"
+        android:label="SingersListFragment" />
 </navigation>

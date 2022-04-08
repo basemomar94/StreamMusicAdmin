@@ -1,4 +1,4 @@
-package com.bassem.streammusicadmin.ui.addsinger
+package com.bassem.streammusicadmin.ui.singers.addsinger
 
 import android.app.Application
 import android.net.Uri
